@@ -90,13 +90,12 @@
 
 % The list of authors, and the short list which is used in the headers.
 % If you need two or more lines of authors, add an extra line using \newauthor
-\author[D. Huppenkothen et al.]{Daniela Huppenkothen$^{1, 2, 3}$, Lucy M. Heil$^{4}$, David W. Hogg$^{1,2,5}$, Andreas Mueller$^{2}$
+\author[D. Huppenkothen et al.]{Daniela Huppenkothen$^{1, 2, 3}$, Lucy M. Heil, David W. Hogg$^{1,2,5}$, Andreas Mueller$^{2}$
 \\
 % List of institutions
    $^{1}$Center for Cosmology and Particle Physics, Department of Physics, New York University, 4 Washington Place, New York, NY 10003, USA \\
   $^{2}$Center for Data Science, New York University, 65 5h Avenue, 7th Floor, New York, NY 10003 \\
  $^{3}$E-mail: daniela.huppenkothen@nyu.edu \\
- $^{4}$
   $^{5}$Max-Planck-Institut f\"{u}r Astronomie, Heidelberg, Germany \\
   $^{6}$Simons Center for Data Analysis, 160 Fifth Avenue, 7th floor, New York, NY 10010, USA
 }
@@ -155,22 +154,14 @@ It is likely that the complex, recurring variability patterns are driven by glob
 It is clear that the state changes in GRS1915+105 must in some way depend on global properties of the accretion disc, and can act as probes of physical processes within the disc as well as the coupling between the disc and the jet. Thus, understanding the properties of these states and the long-term evolution of GRS 1915+105 is of crucial importance. However, studies to date largely concentrate on either individual states or subsets of the available data based on the previous classification of the first four years of \rxte\ data. 
 The purpose of this paper is a study of the full 16-year data set of GRS1915+105 observed with the Proportional Counter Array (PCA) onboard the \textit{Rossi X-ray Timing Explorer} (\rxte). We choose a machine learning approach, novel in this context, to characterize and classify the states in GRS 1915+105. 
 
-Machine learning is a sub-field of computer science concerned with learning patterns from data. In recent years, it has been employed very successfully in a range of different sciences (for an introduction, see e.g. \citealt{bishop2006} or \citealt{ivezic2014} for an astronomy-focused textbook). Machine learning as relevant for astronomy can be broadly separated into two types. In supervised machine learning (either classification or regression), a training data set is available for which the outcomes are known. This requires that such a previous data set exists for which the labels (or regression variables) are known from either human classification or other methods. % AM sentence with bishop has weird structure FIXED
-% AM I'd say machine learning is successful mostly because we have data now FIXED
-% AM logistic regression was introduced in 1958, fisher's linear discriminant analysis in 1936 (and it would probably also work). FIXED
-Unsupervised machine learning, conversely, does not assume that the desired output (e.g.\ labels in classification or continuous variables in regression) is known, but aims to actively learn it from the data itself, subject to some assumptions and constraints that depend on the precise method used. In astronomy, machine learning has recently been used in a large variety of contexts, including among many others the estimation of photometric redshifts in the Sloan Digital Sky Survey \citep{carliles2010, beck2016}, automatic classification of galaxies using training data from the Galaxy Zoo project \citep{banerji2010}, variable X-ray source classification for \rosat \citep{mcglynn2004} and \xmm\ \citep{farrell2015}, modeling the \swift/BAT trigger algorithm \citep{graff2015}, and distinguishing long and short Gamma-Ray Bursts \citep{tarnopolski2015}.
-% AM you say "labels are known" which kind of implies a classification setup. maybe say "no desired output is known"? FIXED
-% AM if you go so broadly, there is also reinforcement learning, which is kind of a third type, that you probably don't want to mention as it is not really relevant. Maybe put this in there, or say "the types of machine learning relevant for astronomy are supervised and unsupervised" FIXED
-% AM maybe the neural networks for the galaxy zoo would also be interesting to mention? FIXED
+Machine learning is a sub-field of computer science concerned with learning patterns from data. In recent years, it has been employed very successfully in a range of different sciences (for an introduction, see e.g. \citealt{bishop2006} or \citealt{ivezic2014} for an astronomy-focused textbook). Machine learning as relevant for astronomy can be broadly separated into two types. In supervised machine learning (either classification or regression), a training data set is available for which the outcomes are known. This requires that such a previous data set exists for which the labels (or regression variables) are known from either human classification or other methods. 
+Unsupervised machine learning, conversely, does not assume that the desired output (e.g.\ labels in classification or continuous variables in regression) is known, but aims to actively learn it from the data itself, subject to some assumptions and constraints that depend on the precise method used. In astronomy, machine learning has recently been used in a large variety of contexts, including among many others the estimation of photometric redshifts in the Sloan Digital Sky Survey \citep{carliles2010, beck2016}, automatic classification of galaxies using training data from the Galaxy Zoo project \citep{banerji2010, dieleman2015}, variable X-ray source classification for \rosat \citep{mcglynn2004} and \xmm\ \citep{farrell2015}, modeling the \swift/BAT trigger algorithm \citep{graff2015}, and distinguishing long and short Gamma-Ray Bursts \citep{tarnopolski2015}.
 The existing \rxte\ data set for GRS 1915+105 is particularly well suited for a machine learning approach: the source was subject of one of the most comprehensive X-ray monitoring campaigns performed with \rxte, yielding a data set of sufficient size for automatic classification while being too large to be classified by hand in its entirety. It shows fourteen discrete classes, and a fraction of the data set has been annotated by hand in the past, yielding the training set required for supervised machine learning tasks.
-% AM is it "subject of" or "subject to" in this context? I guess "of" but not 100% I THINK SO, TOO
-% AM how has it been classified before if hand annotation is not feasible? DONE
+
 \begin{figure*}
 \begin{center}
 \includegraphics[width=\textwidth]{grs1915_asm_lc_all.pdf}
 \caption{\rxte\ All-Sky Monitor (ASM) light curve in Modified Julian Date (MJD) for the entire duration of the \rxte\ mission. Each panel covers $500$ days. The solid blue line is the ASM light curve. The green dots represent the start points of the \rxte/PCA observations with high enough time resolution to be relevant for this analysis. The Figure shows that the \rxte/PCA observations span the entire lifetime and provide an approximately regular sub-sample with high coverage in time, though each observation is short.}
-% the abbreviation MJD is not defined anywhere but I guess it's common enough? FIXED
-% what do we learn from this figure? FIXED
 \label{fig:asm_total}
 \end{center}
 \end{figure*}
@@ -191,8 +182,7 @@ In the following, we use the $3 - 75$ keV band for all time series and power spe
 \begin{figure}
 \begin{center}
 \includegraphics[width=9cm]{grs1915_durations.pdf}
-\caption{Histogram of the durations of all observations used in the analysis. Most observations have durations of $1000$ --- $5000$ seconds, few are significantly longer. Note that these reflect total durations for a given observation without application of Good Time Intervals (GTIs); in the analysis below, these durations may be shortened or split in parts by detector failures and the $90$-minute orbit of the space craft.}
-% maybe replace this plot by a cumulative distribution plot? that shows how much of the data is covered maybe? [????] I don't think so?
+\caption{Histogram of the durations of all observations used in the analysis. Most observations have durations of $500$ --- $3500$ seconds. Note that these reflect total durations for a given observation without application of Good Time Intervals (GTIs); in the analysis below, these durations may be shortened or split in parts by detector failures and the $90$-minute orbit of the space craft.}
 \label{fig:obsdurations}
 \end{center}
 \end{figure}
@@ -201,7 +191,6 @@ Figure \ref{fig:obsdurations} shows a histogram of the durations of individual o
 In practice, many light curves are shorter, since data drop-outs and interruptions in the observations lead to good time intervals that are shorter than the nominal observation time. This is an important limitation to keep in mind, given that many of the patterns observed in the light curves of GRS 1915+105 tend to be of the order of $\sim\! 1000 \,\mathrm{s}$ long.  This also leaves us with an important decision to make: do we use all segments regardless of length, or do we produce light curves of equal length for the classification, at the risk of loosing the shortest light curves? The latter is preferable in order to avoid systematic biases in our features (which, in the case of summary statistics, might depend on the number of data points in the light curve) and because some features are structured such that light curves of different duration give feature vectors of different lengths, making the later classification task vastly more complex. 
 
 This implies that there is a trade-off between descriptiveness and sample completeness: when choosing long segments, we likely encapsulate more of the characteristic behaviour of a state, which can sometimes consist of cycles lasting more than a thousand seconds. On the other hand, if we choose long segments, we necessarily exclude all light curves that are shorter than that, for example because their Good Time Intervals (GTIs) only allowed for shorter segments. Here, we pick a segment length of $1024\,\mathrm{s}$ as a reasonable trade-off between being descriptive (generally, the patterns observed in \citet{belloni2000} last $\sim\!1000\,\mathrm{s}$ or so) and providing sufficient samples for classification. Note that we also choose overlapping segments starting every $256\,\mathrm{s}$, both for data augmentation as well as to account for phase shifts in periodic patterns. This leaves us with a total of $8506$ data segments of $1024\,\mathrm{s}$ duration, each of which consists of $8192$ data points in each of the four energy bands.
-% AM "good time intervals" sounds odd to me [ASTRO TERM]
 
 \section{Feature Engineering}
 \label{sec:featureengineering}
@@ -209,18 +198,14 @@ This implies that there is a trade-off between descriptiveness and sample comple
 While some machine learning algorithms can produce reliable classifications on raw data (e.g. a light curve), we find that these algorithms fail on the problem at hand for a number of reasons. The data set to be explored here is relatively small, in machine learning terms, with some classes having less than ten examples in the set of examples with human annotations. Additionally, the light curves show complex periodic patterns whose phases are random with respect to the start of an observation. Thus, different light curves of the same class are phase-shifted and may appear as very different to a machine learning algorithm purely due to this phase shift alone.
 
 Instead, we reduce the number of dimensions by extracting \textit{features}, descriptive summaries of the raw data that will allow for efficient separation of the various classes in feature-space.
-% AM on the order, not of the order, right? [ONLY IN AMERICAN ENGLISH]
-% AM the claim is kinda hand-wave-y. It depends on how hard the problem is. did you try the raw data and fail? We can discuss in person. Which kind of methods are you talking about specifically? FIXED
-In the following, a \textit{sample} is a single instance of the ensemble to be classified, in our case an RXTE data segment (consisting of a light curve in four energy bands) of GRS1915+105, i.e.\ a $4 \cdot 8192 = 32768$-dimensional vector. For each sample, we compute a set of features for classification. % AM it sounds like you introduce the term features again, even though you introduced it two sentences earlier. FIXED
+In the following, a \textit{sample} is a single instance of the ensemble to be classified, in our case an RXTE data segment (consisting of a light curve in four energy bands) of GRS1915+105, i.e.\ a $4 \cdot 8192 = 32768$-dimensional vector. For each sample, we compute a set of features for classification. 
 
 Feature engineering is the most important and most difficult part of any machine learning problem. It is here where domain knowledge of the problem at hand becomes crucial to finding the most informative features to be used by the computer in the subsequent classification task. 
 We use the previous (human-based) annotations by \citet{belloni2000}, supplemented with additional annotations published in \citet{kleinwolt2002} and \citet{hannikainen2003} to guide the feature engineering task. With relatively high-resolution light curves ($\Delta t = 0.125 \,\mathrm{s}$) in four energy bands, there is a multitude of possible features in time, energy and frequency domains that could potentially inform our choices. Because we aim to automate the manual classification in \citet{belloni2000}, we base our feature engineering on similar features such as the hardness ratios and overall appearance of the light curves. We also supplement the feature set derived from the time series and hardness ratios with properties of the power spectrum.
-% AM "classified data" sound odd FIXED
-% AM I would make a stronger case that you use features from belloni2000 because you want to recover the same states, but extend it to more data. You are automating (what I guess is manual work) belloni, so you can base your work on what they already did. FIXED
 
 \subsection{Time Series Features}
 
-Because it is difficult to encapsulate the large variety of shapes observed in the light curves of GRS 1915+105, we use a mix of very simple summary features and extract a number of features from a autoregressive model (as explained below). The summary features are: the mean count rate, median count rate, total variance, skewedness and kurtosis in the light curve segment in the $3 - 75$ keV band. 
+Because it is difficult to encapsulate the large variety of shapes observed in the light curves of GRS 1915+105, we use a mix of very simple summary features and extract a number of features from an autoregressive model (as explained below). The summary features are: the mean count rate, median count rate, total variance, skewedness and kurtosis in the light curve segment in the $3 - 75$ keV band. 
 
 The light curves observed from GRS1915+105 show a very rich variability behaviour, including complex patterns not well represented by the summary features listed above. Encapsulating these complex variability patterns in a few parameters is generally difficult: for example, any representation must be phase shift-invariant. That is, for roughly periodic patterns, features should look very similar regardless of where in the cycle a light curve begins. We attempt to encapsulate the variability in a simple autoregressive model, where the data $y_t$ at any given point in the light curve $t$ depends on a linear combination of $k$ data points immediately before:
 % AM "extract a number of features from a linear model." I feel this deserves more of an explanation here. Given the amount of ML knowledge you assume of the reader, this is hard to understand (and even I can't say for sure what you mean without reading on) [after reading on, I find that none of the interpretations I had was the one I imagined, you might want to say "using an autoregressive model, as explained below"]
@@ -242,7 +227,7 @@ We minimize the following equation with respect to the weight vector $w$ to infe
 
 \noindent where $\lambda$ is a regularization parameter that controls for overfitting of the data. We run this optimization for each segment independently, and extract the weight vectors as features to be used in the subsequent classification.
 
-The parameter $k$ defining the number of data points relevant in determining the data point $y_{t+1}$ and consequently the number of weights is a free parameter to be estimated. The final free parameter is the temporal resolution $\Delta t$ of the light curves. In principle, it is possible to run the feature extract on the unbinned light curves with a resolution of $\Delta t = 0.125\,\mathrm{s}$. However, averaging a set of $n$ neighbouring bins may reduce variance due to measurement noise and thus lead to cleaner features. The parameter space for these features was explored via the validation set and will be explained in more detail in Section \ref{sec:freeparams}.
+The parameter $k$ defining the number of data points relevant in determining the data point $y_{t+1}$ and consequently the number of weights is a free parameter to be estimated. The final free parameter is the temporal resolution $\Delta t$ of the light curves. In principle, it is possible to run the feature extraction on the unbinned light curves with a resolution of $\Delta t = 0.125\,\mathrm{s}$. However, averaging a set of $n$ neighbouring bins may reduce variance due to measurement noise and thus lead to cleaner features. The parameter space for these features was explored via the validation set and will be explained in more detail in Section \ref{sec:freeparams}.
 
 \begin{table*}[hbtp]
 \renewcommand{\arraystretch}{1.3}
@@ -253,7 +238,7 @@ The parameter $k$ defining the number of data points relevant in determining the
 \toprule
 \bf{Feature Set} & \bf{Parameter} & \bf{Meaning} & Best Value &  \bf{Possible Values} \\ \midrule
 		& C & Regularization magnitude & $1$ & $[10^{-3}, 10^{-2}, 0.1, 1, 10, 100]$ \\ \midrule
- Linear Model & $\Delta t$ & Light curve time resolution & $0.125$ & $[0.125, 1.0, 2.0, 6.25]$ \\
+ Autoregressive Model & $\Delta t$ & Light curve time resolution & $0.125$ & $[0.125, 1.0, 2.0, 6.25]$ \\
 		& $k$ & Number of time bins determining current time bin & $10$ & $[2, 5, 7, 10, 20, 30, 50, 80]$ \\
 		& $\lambda$ & Regularization parameter & $1000$ & $[0.01, 0.1, 1, 10, 20, 50, 100, 1000]$ \\ \midrule
 Power spectrum PCA & $N$ & Number of components & $10$ & $[1,2,3,5,10,20,50,100]$ \\
@@ -267,41 +252,28 @@ Power spectrum PCA & $N$ & Number of components & $10$ & $[1,2,3,5,10,20,50,100]
 \label{table:parameters}
 \end{table*}
 
-% AM in the linear model, the best parameters are on the boundaries of the values you tried. Why haven't you expanded the search in this direction? FIXED!!! 
-
 \subsection{Power Spectral Features}
 
 We use power spectral features based on the power colours defined in \citep{heil2015}. We compute power spectra in fractional rms normalization for all available light curves and integrate over frequencies in order to compute the fractional rms amplitude in different frequency bands. 
-% AM first sentence maybe "We use the power spectral features as described in heil" FIXED
-% AM second sentence is incomprehensible to me, but maybe that's ok. FIXED :) 
 Following the power colours defined in \citet{heil2015}, we choose our bands to be $P_\mathrm{A} = 0.0039-0.031 \,\mathrm{Hz}$, 
 $P_\mathrm{B} = 0.031-0.25 \,\mathrm{Hz}$, $P_\mathrm{C} =  0.25-2.0 \,\mathrm{Hz}$ and $P_\mathrm{D} = 2.0-16.0 \,\mathrm{Hz}$. We also construct power colours $\mathrm{PC}_1 = P_\mathrm{C}/P_\mathrm{A}$ and  $\mathrm{PC}_2 = P_\mathrm{B}/P_\mathrm{D}$.
 In some states, a quasi-periodic oscillation (QPO) is clearly present. As a simple proxy and to avoid time-consuming power spectral fitting, we design a feature composed of the frequency where $\nu P_\nu$, i.e. each power spectral bin multiplied by its frequency,  has its maximum. This feature generally encodes the frequency that dominates the overall variance. If a QPO is present, this feature will encode the frequency of that QPO. For states without QPO, the maximum is generally lower and set by the broadband noise component.
-% AM don't understand the last sentence, not sure if I should [NO]
 
-Because these features offer only an incomplete description of the power spectrum in different states, in particular the presence of a QPO cannot be completely described by the prescriptions above (partly because the power spectral bands are much broader, thus a QPO might not have a pronounced effect). Instead, we build a Principal Component Analysis (PCA) representation of the power spectra and include the principal components as features. The number of PCA components, $N_\mathrm{PCA}$ is a free parameter, and will be discussed in more detail in Section \ref{sec:freeparams} below. 
+Because these features offer only an incomplete description of the power spectrum in different states, in particular the presence of a QPO cannot be completely described by the prescriptions above (partly because the power spectral bands are much broader, thus a QPO might not have a pronounced effect). Instead, we build a Principal Component Analysis (PCA; \citealt{pearson1901}) representation of the power spectra and include the principal components as features. The number of PCA components, $N_\mathrm{PCA}$ is a free parameter, and will be discussed in more detail in Section \ref{sec:freeparams} below. 
 
 \subsection{Hardness Ratio Features}
 
-\citet{belloni2000} showed that the different classes occupy different positions in the space spanned by HR1 and HR2. While for most classes, there seems to be a strong (approximately linear) correlation between HR1 and HR2, some classes show more complex correlations where the source follows curved tracks through this space. In order to characterize the properties of the spectral evolution, we extract mean, skewedness and kurtosis from each hardness ratio separately. Additionally, we extract the covariance matrix of HR1 and HR2 for each segment, corresponding to the variance of each hardness ratio as well as the covariance between them, yielding a total of $9$ features based on the spectral evolution.
-% AM "space over time" sounds odd to me. FIXED
-% AM typo: mean skewedness (no s) FIXED
-% AM not sure what you mean by two samples. HR1 and HR2? Not sure samples is good for that here FIXED
-
-It is worth noting that we explored the use of other techniques to extract hardness ratio features, notably 2D histogram maps, PCA and manifold learning techniques, and found them to be no better than the summary statistics above, thus we chose the latter for their simplicity and straightforward interpretability. 
+\citet{belloni2000} showed that the different classes occupy different positions in the space spanned by HR1 and HR2. While for most classes, there seems to be a strong (approximately linear) correlation between HR1 and HR2, some classes show more complex correlations where the source follows curved tracks through this space. In order to characterize the properties of the spectral evolution, we extract mean, skewedness and kurtosis from each hardness ratio separately. Additionally, we extract the covariance matrix of HR1 and HR2 for each segment, corresponding to the variance of each hardness ratio as well as the covariance between them, yielding a total of $9$ features based on the spectral evolution. It is worth noting that we explored the use of other techniques to extract hardness ratio features, notably 2D histogram maps, PCA and manifold learning techniques, and found them to be no better than the summary statistics above, thus we chose the latter for their simplicity and straightforward interpretability. 
 
 
 \subsection{Feature Selection}
 \label{sec:featureselection}
 
 We randomly split the observations in training, validation and test data sets, with $50\%$ of observations in the training set and $25\%$ of all observations in the validation and test sets, respectively. This results in $4668$ samples in the training data set, $2094$ samples in the validation set, and $2450$ sample in the test data set. The differences in samples in the validation and test set are due to the fact that we split \textit{observations} (i.e. before creating segments of equal length) rather than samples. This is necessary because we extract overlapping segments, thus picking randomly from segments would lead to the loss of independence between training, validation and test data sets. As Figure \ref{fig:asm_total} shows, individual observations are generally separated in time, and can thus be considered independent.
-% AM they are not "independent" because they are part of a time series, right? They could be neighboring in time, right? Is that a problem? Why not? FIXED
 
 For feature selection and supervised classification, we use the combined previous classifications by \citet{belloni2000}, \citet{kleinwolt2002} and \citet{hannikainen2003} in order to capture all $14$ currently known states, but include only classifications where the entire observation was seen to be in a single state in order to avoid accidental mis-classification as the source switches states within an observation. This yields a total of $1884$ previously classified samples, with $885$ classified samples in the training set, $480$ samples in the validation set and $519$ samples in the test set, respectively. Note that the data set is heavily imbalanced with respect to class representation: previously, the source was known to spend the majority of its time in the $\chi$ state, while other states (e.g.\ $\eta$ and $\omega$) were only seen in one or two observations. 
 
-Initial visualization showed that some features span a wide range of values. Because some machine learning methods tend to do better in well-behaved (linear) feature spaces, we take the logarithm of features that extend over several orders of magnitude and use the validation set to confirm that this improves classification with the logistic regression model. In particular, these features are: the variance of the light curve, the frequency where $\nu P_\nu$ has its maximum, all fractional rms values and power colours derived from the power spectrum, and the variances of both hardness ratios. 
-% AM scaling doesn't affect tree-based models for example. I think you need to be a bit more explicit. And what makes you think the separation will be more linear in the new space? (that's a trick question kind of, I have no idea what the answer is ;) [VALIDATION TELLS ME SO!] FIXED
-% LH: Clarify in previous section (3.2) what is meant by where the power spectrum peaks? I expect most people interested regularly work in nu*P(nu) space, but just in case? DONE
+Initial visualization showed that some features span a wide range of values. Because some machine learning methods, specifically the logistic regression model introduced below, tend to do better in well-behaved (linear) feature spaces, we take the logarithm of features that extend over several orders of magnitude and use the validation set to confirm that this improves classification with the logistic regression model. In particular, these features are: the variance of the light curve, the frequency where $\nu P_\nu$ has its maximum, all fractional rms values and power colours derived from the power spectrum, and the variances of both hardness ratios. 
 
 \subsubsection{Free Parameters}
 \label{sec:freeparams}
@@ -311,31 +283,24 @@ To estimate the free parameters of the model (see Table \ref{table:parameters} f
 \begin{figure}
 \begin{center}
 \includegraphics[width=9cm]{grs1915_feature_accuracy}
-\caption{The greedy search for the most important features: the number of features used for classification versus the accuracy (fraction of correctly classified samples) of classification in each case. The search shows that a simple logistic regression approach can yield a validation accuracy $>97\%$, and that $10$ features seem to be largely sufficient to classify data from GRS 1915+105. Adding higher features does not add any improvement in predictive power, and can in some cases be detrimental to performance, if it causes the linear model to overfit.}
+\caption{The greedy search for the most important features: the number of features used for classification versus the accuracy (fraction of correctly classified samples) of classification in each case. The search shows that a simple logistic regression approach can yield an $F_1$ score of  $>91\%$, and that $10$ features seem to be largely sufficient to classify data from GRS 1915+105. Adding higher features does not add any improvement in predictive power, and can in some cases be detrimental to performance, if it causes the logistic regression model to overfit.}
 \label{fig:scores}
 \end{center}
 \end{figure}
 
 In order to estimate which parameters will yield the optimal results, we use supervised learning in the form of logistic regression (\citealt{cox1958}; as implemented in \textit{scikit-learn}; \citealt{scikit-learn}). Logistic regression is one of the simplest classification algorithms. It defines a linear model analogously to linear regression, but because outcomes are discrete rather than continuous, it uses a binomial distribution (multinomial distribution if more than two outcomes are possible) instead of a normal distribution in defining the likelihood \citep{cox1958}. In practical terms, logistic regression aims to draw a hyperplane in the $N$-dimensional space spanned by all features such that the hyperplane separates samples belonging to a given class in the training set from the remainder. Multi-class classification is performed either using a multinomial distribution or by using a one-versus-all scheme: for each class in the training set, a separate hyperplane is drawn such that the split between samples belonging to said class and the remaining samples is maximized. We use the the least squares (L2) norm for regularization, which introduces an additional parameter, $C$. This parameter is used to balance the ability of the model to produce accurate predictions against tendencies to overfit. It is worth noting here that we also attempted the supervised machine learning task with other algorithms that use different strategies for finding decision boundaries between classes, most notably linear support vector machines \citep{guyon1993,cortes1995} and random forests \citep{breiman2001}, and found no improved performance compared to the logistic regression classifier, thus we keep the latter in the following for its interpretability.
-% AM I the "into the model" part after regularization is ambiguous, I think. FIXED
-% AM linear support vector machines are not really more complicated than logistic regression. FIXED
 
-For each combination of parameters listed in Table \ref{table:parameters}, we use the training set to train the model with these parameters and test the performance with the validation set. For performance assessment, we use the $F_1$ score, a harmonic mean of \textit{precision} and \textit{recall}. In binary classification, precision refers to positive predictive value, i.e.\ the number of true positive examples of a class divided by all positive classifications. Recall, in turn, refers to the true positive rate, the ratio of true positives to all correctly identified samples. In the multi-class case considered here, the $F_1$ score is computed for each class in turn and averaged for all classes. We choose a weighted average of the $F_1$ score to account for the class imbalances in terms of samples. %This approach is taken in the model selection stage to make sure underrepresented classes are not entirely subsumed by the more common classes, which is a concern when using accuracy (i.e.\ the ratio of all correctly predicted labels and the number of total samples) alone. 
-We do use accuracy when assessing performance of the classification with the final, trained model, since it can be straightforwardly interpreted as the fraction of samples the classifier identified correctly.
+For each combination of parameters listed in Table \ref{table:parameters}, we use the training set to train the model with these parameters and test the performance with the validation set. For performance assessment, we use the $F_1$ score, a harmonic mean of \textit{precision} and \textit{recall}. In binary classification, precision refers to positive predictive value, i.e.\ the number of true positive examples of a class divided by all positive classifications. Recall, in turn, refers to the true positive rate, the ratio of true positives to all correctly identified samples. In the multi-class case considered here, the $F_1$ score is computed for each class in turn and averaged for all classes. We choose a weighted average of the $F_1$ score to account for the class imbalances in terms of samples.
+We do use accuracy when assessing performance of the classification with the final, trained model in Section \ref{sec:supervised} below, since it can be straightforwardly interpreted as the fraction of samples the classifier identified correctly.
 
 Using the approach described above, we arrive at the best values used for the classification, yielding a total of $41$ features for each of the $8506$ data segments. This comprises the features explicitly named above, as well as $10$ weights from the autoregressive model, and $10$ components from performing PCA on the power spectra.
-% AM linear model -> autoregressive model FIXED
-% AM accuracy is not a great choice here :-/ macro or micro-average f1 or multi-class AUC or mean accuracy might have been better, but I guess it's too late CHANGED
-% AM you did not perform cross-validation, only validation. you said earlier you'd be using cross-validation. FIXED
 
 \subsubsection{Feature Importance}
 
 In order to assess the relative predictive power of each feature, we implemented a greedy search to find the most important features in our set. 
 Once more, we used supervised learning with the previously-classified labels as the training set, but computed the validation score for each feature independently, as if it was the only feature available for classification. We set the feature with the highest validation score as the most important feature, and then perform a second pass, this time using the combination of the winner of the first round with every other feature. Again, we picked the combination with the highest score, and continued this process until all features were exhausted. This procedure answers simultaneously two questions. (i) It provides a ranking for the relative predictive power of each feature, and (ii) it provides an assessment whether all features are required to classify the data. The latter need not necessarily be true: some features (e.g. the power colours) are combinations of other features, and thus all features might not be required.
 
-In Figure \ref{fig:scores}, we show the results of the greedy search. We find that the $F_1$ score is generally high: $\sim\!\! 91\%$ on the validation set for the the $10$ best features, which provide most of the predictive power. Adding additional features generally add no more improvement, and may even decrease the score. The most predictive features are dominated by power spectral features: $\mathrm{PC}_1$ and the power in PSD band  $P_\mathrm{D} = 0.0039-0.031 \,\mathrm{Hz}$ along with a PCA component take the top three spots. Additional improvement is provided by the autoregressive process, with four of its 10 components represented in the reduced feature set, as well as mean and variance of the first hardness ratio, and the skewness of that light curve in the entire energy band. We continue with the rest of the analysis with this reduced set of 10 features, since adding many features does not improve predictiveness. We note that including another $15$ features for a total of $35$ features in the classification does not change the results presented below in any significant way.
-% Why do you use the reduced feature set? Does that provide better generalization performance? Looking at figure 3 is testing many hypotheses, so you might be overfitting by picking 11 (also, isn't 13 higher?). [FIXED]
-
+In Figure \ref{fig:scores}, we show the results of the greedy search. We find that the $F_1$ score is generally high: $\sim\!\! 91\%$ on the validation set for the the $10$ best features, which provide most of the predictive power. Adding additional features generally add no more improvement, and may even decrease the score. The most predictive features are dominated by power spectral features: $\mathrm{PC}_1$ and the power in PSD band  $P_\mathrm{D} = 0.0039-0.031 \,\mathrm{Hz}$ along with a PCA component take the top three spots. Additional improvement is provided by the autoregressive process, with four of its 10 components represented in the reduced feature set, as well as mean and variance of the first hardness ratio, and the skewness of the light curve in the entire energy band. We continue with the rest of the analysis with this reduced set of 10 features, since adding many features does not improve predictiveness. We note that including another $15$ features for a total of $35$ features in the classification does not change the results presented below in any significant way.
 
 \begin{figure*}
 \begin{center}
@@ -344,29 +309,25 @@ In Figure \ref{fig:scores}, we show the results of the greedy search. We find th
 unclassified samples in grey. On the right, we show the union of the human classification and the predicted states for the previously unclassified samples. 
 Even in this low-dimensional representation, it is possible to see how samples belonging to the same state tend to cluster close together. That this is true also 
 for the combined human and machine classified samples indicates that the logistic regression model performed fairly well. We note that seemingly disconnected 
-regions are an artifact reducing 10 dimension to 2 and plotting many points of different classes in the same Figure.} 
+regions are an artifact of reducing 10 dimensions to 2 and plotting many points of different classes in the same Figure.} 
 \label{fig:supervised_pca}
 \end{center}
 \end{figure*}
-% AM have you tried LDA for this? Might look better. do you have an explanation on delta being split in the human annotations? or is that overplotting? DOESN'T LOOK MUCH BETTER; FIXED
 
 \section{Supervised Classification}
 \label{sec:supervised}
 
-Using the results of the previous sections, we performed supervised classification using logistic regression on the combined training and validation set for GRS 1915+105 \footnote{The full set of observations with probabilities for each state can be found at the following address: INSERT LINK}.
-% you're using the C parameter you found before, right? Are you training on the training + validation set or only the training set? BOTH // FIXED
+Using the results of the previous sections and the parameters determined in Section \ref{sec:freeparams}, we performed supervised classification using logistic regression on the combined training and validation set for GRS 1915+105 \footnote{The full set of observations with probabilities for each state as well as all code relevant to the project can be found at the following address: \url{https://github.com/dhuppenkothen/BlackHoleML}}.
 Overall, with a $92.5\%$ accuracy on the test set, the classifier performs very well. This is especially true in light of the small size of the data set as well
-% AM Do you have an explanation of the discrepancy between validation and test accuracy? I DON'T HAVE MANY SAMPLES!
-as the heavy imbalance between classes, offering only a few test cases for some of the rarer states. At the same time, while the largest class accounts for $\sim 40\%$ of all samples,  incorrect assigments to the dominant state are not the main cause of the mis-classifications, indicating that the model does not simply underfit by assigning examples of rare states to the more common ones. Additionally, the performance of our model is in line with results from other disciplines, e.g.\ in image classification of dinoflagellates \citep{culverhouse2003}, verb classification in language tasks \citep{merlo2000} and finding humans in images \citep{quinn2010}, where human accuracy is often found to be no better than 
+as the heavy imbalance between classes, offering only a few test cases for some of the rarer states. At the same time, while the largest class accounts for $\sim 40\%$ of all samples,  incorrect assignments to the dominant state are not the main cause of the mis-classifications, indicating that the model does not underfit by assigning examples of rare states to the more common ones. Additionally, the performance of our model is in line with results from other disciplines, e.g.\ in image classification of dinoflagellates \citep{culverhouse2003}, verb classification in language tasks \citep{merlo2000} and finding humans in images \citep{quinn2010}, where human accuracy is often found to be no better than 
 $\sim 90\%$. An illustration of the classification as a whole is presented in Figure \ref{fig:supervised_pca}, 
-where we show a 2-dimensional representation of our 10-dimensional features space achieved with Principal Component Analysis (PCA). 
-% AM Saying "90 accurate is good in light of the imbalance" seems misleading. How large is the largest class?
+where we show a 2-dimensional representation of our 10-dimensional features space achieved with PCA. 
 
 \subsection{Confused Classifications}
 \label{sec:confusion}
 
 In Figure \ref{fig:confusion_matrix}, we show the confusion matrix between the human classification and the machine classification on the 
-test set. Generally, only few classes are confused. For these cases, we visually compared the light curves, hardness ratios and power spectra of 
+test set. Generally, the matrix is sparse, and only few classes are confused. For these cases, we visually compared the light curves, hardness ratios and power spectra of 
 typical examples (based on the human classification) of both the class chosen by a human and the computer. We find that disagreements between 
 human and machine classification fall into one of three categories:
 \begin{itemize}
@@ -375,8 +336,7 @@ segment. Examples are light curves of the $\alpha$ state, which are occasionally
 The small size (for machine learning purposes) of the data set makes it unfavourable to choose longer segments, thus a small fraction of segments always run the risk of being 
 confused in this way. It is worth noting, however, that many of the samples falling in this particular case occur only once or at most twice in the 
 test set for a certain combination of classes, thus they are expected to add only a small amount of noise to the classifications.}
-% AM last sentence uses case twice FIXED
-\item{For some cases where human and machine classifications disagree, the simple summary statistics and linear model used to represent the variability
+\item{For some cases where human and machine classifications disagree, the simple summary statistics and autoregressive model used to represent the variability
  in the light curves fail to fully encode the complexities of the patterns observed in GRS 1915+105. The most striking example is the $\rho$ state, where several 
  segments were instead classified as belonging to the $\beta$ state instead. Looking at the light curve, it is fairly straightforward for the human brain to distinguish 
  both states based on the patterns in the light curve. However, for several cases, the model used for encoding variability was not sufficient to fully appreciate the differences between those two states, in particular since the power spectra look fairly similar. Here, a better model for the light curves would clearly have helped with the classification, however, building such a model for light curves as complex as those observed in GRS 1915+105 is a major undertaking and thus the subject of future work.}
@@ -392,16 +352,12 @@ disagreement.}
 \label{fig:confusion_matrix}
 \end{center}
 \end{figure}
-% AM I like numbers in confusion matrices because hues are hard to distinguish
 
-The multinomial probability distribution used in the logistic regression model allows for calculating the predicted probability for each class and each sample. We compared the predicted probabilities for each human-generated class and computer-generated class for all of the confused cases and compared them to those cases where human and computer-generated classifications agree. Samples where human and computer agree show a very high predicted probability for the chosen class ($>0.9$ in more than $75\%$ of all cases) and a peaked probability distribution (with low probabilities for all other classes). This is generally not the case for confused cases, which show much flatter probability distributions and the classifier is generally uncertain about its prediction. In these cases, the predicted probability of the class chosen by the computer can be as small as $0.3$ and often close to the probability assigned to the human-generated class. Samples where the model assigns a probability to the class assigned by the human annotations that is similar to the class with the maximum probability are more prevalent in second category laid out above. Conversely, for some confused cases, the predicted probability for the computer-generated class is very high, $>0.8$. These cases tend to be in the first and second category. 
-% AM "close to the human-generated class" -> close to the probability of? FIXED
-% AM "Cases with the closest probabilities between human and computer-generated classes" reformulate? I'm actually not sure what you mean. Cases where the human label was assigned a probability close to the maximum probability by the model? (this also is not the best formulation). Remind us what the second category was, maybe? FIXED
-% AM Maybe formulate this in terms of "the classifier being certain"? If that doesn't sound good, you can talk about flat or peaked probability estimates maybe? FIXED
+The multinomial probability distribution used in the logistic regression model allows for calculating the predicted probability for each class and each sample. We compared the predicted probabilities for each human-generated class and computer-generated class for all of the confused cases and compared them to those cases where human and computer-generated classifications agree. Samples where human and computer agree show a very high predicted probability for the chosen class ($>0.85$ in more than $75\%$ of all cases) and a peaked probability distribution (with low probabilities for all other classes). This is generally not the case for confused cases, which show much flatter probability distributions and the classifier is generally uncertain about its prediction. In these cases, the predicted probability of the class chosen by the computer can be as small as $0.3$ and often close to the probability assigned to the human-generated class. 
 % AM This finding is surprising to me. I would have imagined that if the model is not rich enough, the classifier would be less certain, and more certain in the mislabeled and partial observation case. Do you have an explanation?
 \subsection{Overall Distribution of States}
 
-In Figure \ref{fig:state_durations} we compare the total duration the source spent in each state during the observed intervals for both the human classified part of the data as well as the computer-generated classification. At the same time, this presents a split in time: \citet{belloni2000} and \citet{kleinwolt2002} classified observations between 1996 June and 1999 December, with an additional state identified in an observation on 2003 Mar 6. Trained on these human classifications,
+In Figure \ref{fig:state_durations} we compare the total duration the source spent in each state during the observed intervals for both the human classified part of the data as well as the computer-generated classification. At the same time, this presents a split in time: \citet{belloni2000} and \citet{kleinwolt2002} classified observations between 1996 June and 1999 December, with an additional state identified in an observation on 2003 Mar 6 \citep{hannikainen2003, hannikainen2005}. Trained on these human classifications,
 we allowed the computer to find classes for the remaining observations, spanning from $2000$ Jan to the end of \rxte's lifetime in early 2012. 
 Assuming that the logistic regression model generally reproduces the human classification, one may then use the data set to search for time evolution in the overall pattern of states. 
 
@@ -417,7 +373,7 @@ account the overlap between segments for long observations.}
 We find that broadly, the machine classification reproduces the human classification. Particularly the $\chi$ state remains the most common state to find GRS 1915+105 in. Other states such as $\theta$, $\rho$, $\kappa$, $\mu$, $\alpha$ and $\omega$ are represented similarly often, other classes occur with a significantly different frequency in later observations. It is important to note here that the initial distribution on the state occurrences in the logistic regression model was based on the previous state occurrences, that is, a state with a higher previous occurrence was more probable to occur again than a state that was only seen once or twice. In this context, it is interesting to note the relatively higher fraction of time spent in the $\beta$ and $\phi$ states compared to the human-classified data set.
 % AM I feel like prior could be misunderstood here. It's the posterior distribution of \hat{p}(y|x, \theta) based on observing the training data. There is no model p(y), only p(y|x), so I'm not sure if prior is the right word... FIXED
 
-Conversely, the states $\gamma$ and $\eta$ occur much less frequently during later observations compared to the earlier data set. For class $\eta$, this may, to some degree, be due to chance: with only one confirmed observation and the small fraction of the telescope spent on the source, it is intrinsically hard to reliably estimate the duration of the source previously spent in this state. 
+Conversely, the states $\gamma$ and $\eta$ occur much less frequently during later observations compared to the earlier data set. For class $\eta$, this may, to some degree, be due to chance: with only one confirmed observation and the small fraction of telescope time spent on the source, it is intrinsically hard to reliably estimate the duration of the source previously spent in this state. 
 % LH: I think this has been commented on recently possibly in Jason Dexter's or Diego's papers? I can check this if you want [CHECK THIS!!!!]
 Based on our results from Section \ref{sec:confusion}, it is unlikely that confusions between states play a significant role in explaining all discrepancies between the state durations in the human and computer-classified data sets. Confusions seem to dominate in classes whose fraction of observation time are very similar.
 
@@ -466,8 +422,7 @@ in this source. However, a more realistic transition matrix requires more comple
 Overall, it appears that the transition matrix is well-connected: most state transitions are possible, though many occur with a fairly low probability.
 Transitions to and from the $\chi$-state occur more frequently than most other transition, which is not surprising given that the source spends the majority of its time 
 in this state. Conversely, the probability distribution for leaving the $\chi$-state is fairly flat, indicating that the source is more or less equally likely to go into any 
-of the other states. Another notable exception is the transition from omega to $\chi$ state: it seems that when the source is in the omega state, it preferentially 
-returns to the $\chi$ state before moving elsewhere. 
+of the other states.  
 
 There are several other transitions that occur with higher probability. For example, the source is more likely to move from state $\alpha$ into state $\beta$, compared even with $\chi$. 
 Some transitions do not occur at all, for example transitions from states $\delta$ and $\gamma$ into state $\alpha$ or from states $\alpha$ and $\eta$ into state $\delta$. In principle, unobserved transitions are of as much interest as those that occur frequently, though their interpretation requires caution. 
@@ -479,7 +434,6 @@ Some transitions do not occur at all, for example transitions from states $\delt
 \label{fig:pca_physical}
 \end{center}
 \end{figure*}
-% AM: Have you looked at LDA or t-SNE instead of PCA? [DONT LIKE EITHER!]
 
 While the transition matrix is calculated as a set of probabilities, all we can say about the transitions with a probability of $0$ is that they have not been observed 
 during the lifetime of \rxte. This may just as well be due to the lack of continuous observations and the low observational duty cycle as a real physical effects.
@@ -512,7 +466,7 @@ power spectrum, one-scale variability with a single characteristic time scale an
 In both analyses, while not directly comparable, the fundamental idea is to break down the known states, determined entirely by their patterns in light curves and 
 spectral changes, into classes that relate, at least broadly, to underlying physical processes such as stochastic fluctuations of viscosity in the accretion disc or 
 changes in the mass accretion rate. Both \citet{harikrishnan2011} and \citet{polyakov2012} point out that their analyses have several drawbacks and shortcomings. 
-\citet{harikrishnan2011} does not includes neither class $\eta$ nor class $\omega$ in their analysis, and \citet{polyakov2012} specifically excludes class $\omega$ due to 
+\citet{harikrishnan2011} does not include either class $\eta$ or class $\omega$ in their analysis, and \citet{polyakov2012} specifically excludes class $\omega$ due to 
 a lack of data. For class $\delta$, \citet{polyakov2012} point out that more data is needed to decide whether the chaotic attractors or stochastic fluctuations 
 provides a more compelling explanation. These cases imply that the initial classification of the first four years did not provide a sufficient amount of data for the 
 different classes.
@@ -551,8 +505,6 @@ classified as ``chaotic+coloured'' and $8$ as ``chaotic'', respectively.
 \label{fig:transmat_phys}
 \end{center}
 \end{figure}
-% AM definitely numbers in the transition matrix here. [CHECK THIS]
-Given the ambivalent nature of this state, combining properties from both stochastic and chaotic systems, it is expected that this might be the state where confusions occur. The remaining two confused samples split evenly over ``stochastic'' and ``chaotic+coloured'', where ``chaotic'' was the true label.
 
 The transition matrix (see Figure \ref{fig:transmat_phys}) for this classification problem is well-connected. As with the 14-label classification, the source has the 
 highest probability to remain in the same state, given the previous state. However, it can easily reach any of the other two states given its current state, with fairly 
@@ -577,36 +529,26 @@ years of data. In red, we show the computer-classified data from the later eight
 \begin{center}
 \includegraphics[width=\textwidth]{grs1915_supervised_eta_omega.pdf}
 \caption{Inferred states in the 3-state model for samples classified in the 14-state model as either $\eta$ or $\omega$, which have no identification in \citet{harikrishnan2011}.
-We find that most observations in state $\omega$ seem to be closer to other examples of stochastic variability, while for state $\eta$, the situation is less clear, with a significant 
-number of samples identified with some form of chaotic process.} 
+We find that most observations in state $\eta$ seem to be closer to other examples of chaotic+coloured variability, while for state $\omega$, the situation is less clear, with a significant 
+number of samples identified with some form of either chaotic or stochastic process.} 
 \label{fig:etaomega_states}
 \end{center}
 \end{figure*}
 
-Finally, we also  attempt to infer the class membership in the physical model of the remaining two states, $\eta$ and $\omega$. 
+Finally, we also infer the class membership in the physical model of the remaining two states, $\eta$ and $\omega$. 
 In Figure \ref{fig:etaomega_states}, we show the distribution of the samples classified by \citet{kleinwolt2002} as $\omega$ and \citet{hannikainen2003} as $\eta$ 
 in the classification scheme of \citet{harikrishnan2011}, as inferred from the random forest classifier.
-% AM not sure I understand the sentence FIXED?
-Out of $17$ samples in state $\omega$, $11$  ($65\%$) are classified as ``stochastic'', indicating that this state is perhaps similar to states $\chi$ and $\gamma$. Of course, a precise characterisation of the properties of the light curves in this state is only possible with the methods from non-linear dynamics employed in \citet{harikrishnan2011}. This might explain why the random forests classifier has trouble identifying these samples with a single class. It also showcases a general shortcoming in supervised learning: the algorithm will only 
-be trained on what has seen before; if something uniquely new appears, classification is likely to fail.
-% AM don't start a sentence with a number FIXED
+Out of $17$ samples in state $\omega$, $11$  ($65\%$) are classified as ``chaotic'', indicating that this state is perhaps similar to states $\beta$ and $\theta$. This is consistent with the fairly regular pattern of dips observed in \citet{kleinwolt2002} in this state. However, \citet{kleinwolt2002} also point out that in the bright, variable intervals between dips the source shows behaviour reminiscent of state $\gamma$. Segments with no dip or a smaller dip may thus account for the fraction of samples classified as stochastic. This might explain why the random forests classifier has trouble identifying these samples with a single class. It also showcases a general shortcoming in supervised learning: the algorithm will only be trained on what has seen before; if something uniquely new appears, classification is likely to fail.
 
-The situation is much clearer for state $\eta$. All but one of the samples are classified as ``chaotic+coloured''. This state shows pulses on a 5-minute time scale, but these pulses are overall much less regular than those seen for example in the $\rho$ state. In principle, this may be indicative of a chaotic system driving the processes giving rise to the X-ray emission, perhaps contaminated with stochastic, coloured noise. On the other hand, the hardness ratios are significantly different from all other previously observed classes, one of the reasons why these observations were classified as a new state. 
-% AM "this might argue" is not correct, I think. maybe "this is indicative of"? FIXED
-% AM classes previously observed -> previously observed classes FIXED
-% AM "on what has been seen before" maybe avoid passive "on what it has been trained on"? FIXED
+The situation is much clearer for state $\eta$. A large majority of the samples are classified as ``chaotic+coloured''. This state shows pulses on a 5-minute time scale, but these pulses are overall much less regular than those seen for example in the $\rho$ state. In principle, this may be indicative of a chaotic system driving the processes giving rise to the X-ray emission, perhaps contaminated with stochastic, coloured noise. On the other hand, the hardness ratios are significantly different from all other previously observed classes, one of the reasons why these observations were classified as a new state. 
 % AM have you looked at the feature importances of the RF? Would these be interesting to show? Similarly for the many classes, are the logistic regression weights interesting to show? Or what features got selected in the feature selection? (Is there an appendix?)
-
-%AM is the code online? Where would a link to it go?
 
 \section{Discussion and Conclusion}
 \label{sec:discussion}
 
 GRS 1915+105 is a remarkable BHXRB. It has been in continuous outburst since 1992, showing at least $14$ different states, compared to at most 
 $3$ states in other black hole X-ray binaries.
-% AM I found this sentence hard to parse. maybe "compared to at most 3 states in other.." (otherwise it sounds like this RHXRB was compared to 3 others) FIXED
-\rxte's near-continuous monitoring between 1996 and 2011 has resulted in a data set of nearly unprecedented scale and richness, and the existence of its states as well as a subset of previously-classified data makes it an ideal test case for the use of modern machine learning methods in X-ray astronomy.
-% AM dataset of unprecedented scale? FIXED
+\rxte's near-continuous monitoring between 1996 and 2011 has resulted in a data set of this source of unprecedented scale and richness, and the existence of its states as well as a subset of previously-classified data makes it an ideal test case for the use of modern machine learning methods in X-ray astronomy.
 Here, we classify the entire sixteen-year data set observed with \rxte\ for the first time using a logistic regression model. 
 The results allow researchers to pick specific observations where the source inhabited a certain state from the data set for further analyses, vastly improving 
 the previous situation, where only a third of the data had known states.
@@ -614,25 +556,15 @@ the previous situation, where only a third of the data had known states.
 The initial classification was done largely visually: the light curves in the $2-60\,\mathrm{keV}$ band show remarkably complex, but repeating patterns that are 
 easily distinguishable by eye (see e.g. Figure (2) in \citealt{belloni2000}). Encoding these patterns in a set of features that a machine learning algorithm can use proves both difficult and instructive.
 Many patterns, in particular in states $\theta$, $\lambda$, $\nu$, $\alpha$ and $\beta$ last $\sim 1000\,\mathrm{s}$ or more, similar to the duration of most 
-uninterrupted data segments.
-% AM not sure about the use of comparable in this sentence FIXED
-In most light curve segments we extracted, we see at most one cycle of the pattern, or perhaps only a fragment of it.
-% AM what do you mean by data set here? FIXED
+uninterrupted data segments. In most light curve segments we extracted, we see at most one cycle of the pattern, or perhaps only a fragment of it.
 
-A Fourier representation of the data is therefore of limited use here: because of the short duration, it cannot capture the pattern of harmonics generated by the non-sinusoidal nature of the signal.
-% AM *is* of limited use FIXED
-At most, it will be able to capture differences between states at higher frequencies, such as the presence or absence of QPOs.
-% AM "we"->"it" or "we" -> "a fourier representation"? FIXED
-This, however, does not allow us to uniquely distinguish the patterns that are so striking to the naked eye. 
+A Fourier representation of the data is therefore of limited use here: because of the short duration, it cannot capture the pattern of harmonics generated by the non-sinusoidal nature of the signal. At most, it will be able to capture differences between states at higher frequencies, such as the presence or absence of QPOs. This, however, does not allow us to uniquely distinguish the patterns that are so striking to the naked eye. 
 
 At the same time, each observation in a given state will start at a random phase of the pattern. This immediately makes it impossible to use the light curves directly 
 in the machine learning algorithm, since the latter is sensitive to phase shifts. Two light curves of the same state, but shifted in phase appear far 
 from each other in feature space. Despite these caveats, our feature engineering in Section \ref{sec:featureselection} has shown that 
 the most predictive features are power spectral representations of the data, with the top three features achieving a validation accuracy of roughly $80\%$ by themselves.
-% AM it's unclear what the "alone" means. Maybe "which achieve 90% by themselves? Without using any other features"? FIXED
-This indicates that a better 
-model of the variability might improve the classification further. In contrast, features based on the two hardness ratios had only a minor effect, and only HR1 proved 
-to have a measurable effect on the classification accuracy. In the era of spectral timing, it might be of interest to explore features that tie time and energy closer 
+This indicates that a better model of the variability might improve the classification further. In contrast, features based on the two hardness ratios had only a minor effect, and only HR1 proved to have a measurable effect on the classification accuracy. In the era of spectral timing, it might be of interest to explore features that tie time and energy closer 
 together, such as time lags, covariance spectra and coherence.
 
 There are various strategies that might be successful at improving the features encoding variability. One may use much shorter segments than we have done here, 
@@ -658,8 +590,10 @@ low duty cycle of on-target time. Models of this type will be the subject of fut
 Finally, it must be mentioned that \rxte\ no longer operates. Another potentially useful avenue of work might be to use transfer learning methods, which allow 
 for inference on data sets with a warped feature space compared to the original training data. This is of particular use given the existence of different telescopes 
 observing this source, such as \swift\ and \astrosat\, as well as \nicer\ in the near future, which have different sensitivities and energy ranges and will thus create 
-a feature space that is similar to that created with \rxte\ data, but not identical.
+a feature space that is similar to that created with \rxte\ data, but not identical. In the future, combining data from different telescopes in the same classification task
+could lead to improved insights into the system.
 % LM: Mention Astrosat? Could be a nice way to try and get some data(?!) DONE
+
 The exact processes and parameters steering the long-term evolution of GRS 1915+105 are currently unknown. While much attention has focused on 
 individual states, in particular the $\rho$ state with its very regular patterns, the long-term evolution of the source, which states it spends its time in and how 
 it switches between states has defied explanation. Likely, the observed patterns are due to a complex interdependence between MHD processes in the accretion 
@@ -673,12 +607,14 @@ past $16$ years plays an important role in understanding how the accretion disc 
 ``chaotic'' processes) to highlight the connection of the long-term evolution to real, physical processes in the accretion disc. The idea that the underlying driving 
 mechanism could be a chaotic, non-linear dynamical system is compelling, because it reduces the complex problem of magnetohydrodynamics in an 
 accretion disc to a system of ordinary differential equations, whereby changes in the disc are driven by changes in global properties such as viscosity or mass 
-accretion rate. At the moment, no global models of the long-term evolution of GRS 1915+105 exist. However, the feature engineering and classification performed 
+accretion rate. 
+
+At the moment, no global models of the long-term evolution of GRS 1915+105 exist. However, the feature engineering and classification performed 
 in this paper are a first step toward providing the data products that make a comparison between models and data possible. While it is not immediately possible to 
-apply the same classifier to other sources, there are other interesting BHXRBs for which this approach may be useful. First and foremost, IGR J17091-3624 provides an 
+apply the same classifier to other sources, there are other interesting objects for which this approach may be useful. First and foremost, IGR J17091-3624 provides an 
 interesting additional test case as it has shown similar states and state changes to GRS 1915+105. Similarly, some Ultraluminous X-ray Sources (ULXs) have shown variability 
-similar to $\mu$ and $\kappa$ states of GRS 1915+105, indicating perhaps that ULXs are subject to strongly super-Eddington flows. 
-The methodology prevented here presents could thus be useful to help understand a number of poorly understood objects both Galactic and extra-galactic. 
+similar to $\mu$ and $\kappa$ states of GRS 1915+105, indicating perhaps that ULXs are subject to strongly super-Eddington flows \citep{middleton2011}. 
+The methodology presented here could thus be useful to help understand a number of poorly understood objects both Galactic and extra-galactic. 
 % LM: Do we need to mention the other possibly similar sources here? 1H0707, possible links to ULXs etc.? Push that this methodology could be useful to help understand a growing number of poorly understood objects both Galactic & extra-galactic? FIXED
 
 \section*{Acknowledgements}
