@@ -7,8 +7,21 @@ supervised machine learning.
 
 The repository is laid out as follows: 
 * code: python scripts and helper functions used in the analysis
-* data: some useful data files, with additional data uploaded [INSERT LINK]
+* data: some useful data files, with additional data to be uploaded soon!
 * notebooks: Jupyter notebooks detailing the analysis and allowing for reproducting of the figures in the paper
 * paper: all files related to the manuscript submitted to MNRAS
 
+
+Requirements
+------------
+
+The code requires 
+* Python 2.7
+* numpy
+* scipy
+* pandas
+* matplotlib
+* seaborn
+* scikit-learn 0.17
+* [BayesPSD](https://github.com/dhuppenkothen/BayesPSD)
 
