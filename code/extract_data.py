@@ -6,33 +6,10 @@ from astropy.io import fits
 import cPickle as pickle
 
 import convert_belloni
+import grs1915_utils as ut
 
-
-def rebin_lightcurve(times, counts, n=10, type='average'):
-
-    nbins = int(len(times)/n)
-    dt = times[1] - times[0]
-    T = times[-1] - times[0] + dt
-    bin_dt = dt*n
-    bintimes = np.arange(nbins)*bin_dt + bin_dt/2.0 + times[0]
-
-    nbins_new = int(len(counts)/n)
-    counts_new = counts[:nbins_new*n]
-    bincounts = np.reshape(np.array(counts_new), (nbins_new, n))
-    bincounts = np.sum(bincounts, axis=1)
-    if type in ["average", "mean"]:
-        bincounts = bincounts/np.float(n)
-    else:
-        bincounts = bincounts
 
     #bincounts = np.array([np.sum(counts[i*n:i*n+n]) for i in range(nbins)])/np.float(n)
-    #print("len(bintimes): " + str(len(bintimes)))
-    #print("len(bincounts: " + str(len(bincounts)))
-    if len(bintimes) < len(bincounts):
-        bincounts = bincounts[:len(bintimes)]
-
-    return bintimes, bincounts
-
 
 
 ################################################################################################################
@@ -65,7 +42,7 @@ def equalize_resolution(times, counts, nbins):
     """
     if nbins < len(times):
         n = int(len(times)/nbins)
-        times_new, counts_new = rebin_lightcurve(times, counts, n=n, type="average")
+        times_new, counts_new = ut.rebin_lightcurve(times, counts, n=n, type="average")
         return times_new[:nbins], counts_new[:nbins]
     else:
         return times, counts
@@ -192,10 +169,10 @@ def combine_lightcurves(obsids, datadir="./"):
 ################################################################################################################
 
 def bin_lightcurve(dtemp, nbins):
-    tbinned_times, tbinned_counts = rebin_lightcurve(dtemp[:,0], dtemp[:,1], n=nbins, type="average")
-    lbinned_times, lbinned_counts = rebin_lightcurve(dtemp[:,0], dtemp[:,2], n=nbins, type="average")
-    mbinned_times, mbinned_counts = rebin_lightcurve(dtemp[:,0], dtemp[:,3], n=nbins, type="average")
-    hbinned_times, hbinned_counts = rebin_lightcurve(dtemp[:,0], dtemp[:,4], n=nbins, type="average")
+    tbinned_times, tbinned_counts = ut.rebin_lightcurve(dtemp[:,0], dtemp[:,1], n=nbins, type="average")
+    lbinned_times, lbinned_counts = ut.rebin_lightcurve(dtemp[:,0], dtemp[:,2], n=nbins, type="average")
+    mbinned_times, mbinned_counts = ut.rebin_lightcurve(dtemp[:,0], dtemp[:,3], n=nbins, type="average")
+    hbinned_times, hbinned_counts = ut.rebin_lightcurve(dtemp[:,0], dtemp[:,4], n=nbins, type="average")
 
     dshort = np.transpose(np.array([tbinned_times, tbinned_counts, lbinned_counts, mbinned_counts, hbinned_counts]))
     return dshort

@@ -5,7 +5,6 @@ import pandas as pd
 
 
 import powerspectrum
-import generaltools as gt
 import feature_extraction
 
 import glob

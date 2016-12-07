@@ -15,6 +15,46 @@ import copy
 from collections import Counter
 
 
+def conversion(filename):
+    f=open(filename, 'r')
+    output_lists=defaultdict(list)
+    for line in f:
+        if not line.startswith('#'):
+             line=[value for value in line.split()]
+             for col, data in enumerate(line):
+                 output_lists[col].append(data)
+    return output_lists
+
+def getpickle(picklefile):
+    file = open(picklefile, 'r')
+    procdata = pickle.load(file)
+    return procdata
+
+def rebin_lightcurve(times, counts, n=10, type='average'):
+
+    nbins = int(len(times)/n)
+    dt = times[1] - times[0]
+    T = times[-1] - times[0] + dt
+    bin_dt = dt*n
+    bintimes = np.arange(nbins)*bin_dt + bin_dt/2.0 + times[0]
+
+    nbins_new = int(len(counts)/n)
+    counts_new = counts[:nbins_new*n]
+    bincounts = np.reshape(np.array(counts_new), (nbins_new, n))
+    bincounts = np.sum(bincounts, axis=1)
+    if type in ["average", "mean"]:
+        bincounts = bincounts/np.float(n)
+    else:
+        bincounts = bincounts
+
+    #bincounts = np.array([np.sum(counts[i*n:i*n+n]) for i in range(nbins)])/np.float(n)
+    #print("len(bintimes): " + str(len(bintimes)))
+    #print("len(bincounts: " + str(len(bincounts)))
+    if len(bintimes) < len(bincounts):
+        bincounts = bincounts[:len(bintimes)]
+
+    return bintimes, bincounts
+
 def extract_segments(d_all, seg_length = 256., overlap=64.):
     """ Extract light curve segmens from a list of light curves. 
         Each element in the list is a list with two elements: 

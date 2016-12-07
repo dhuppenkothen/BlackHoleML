@@ -1,5 +1,5 @@
 import numpy as np
-import generaltools as gt
+import grs1915_utils as ut
 
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.preprocessing import StandardScaler
@@ -15,6 +15,7 @@ import matplotlib.cm as cmap
 
 import pickle
 
+
 def transform_chi(labels):
     labels[labels == "chi1"] = "chi"
     labels[labels == "chi2"] = "chi"
@@ -29,9 +30,9 @@ def load_features(datadir, tseg, log_features=None, ranking=None):
     features_test_full = np.loadtxt(datadir+"grs1915_%is_features_test.txt"%tseg)
     features_val_full = np.loadtxt(datadir+"grs1915_%is_features_val.txt"%tseg)
 
-    labels_test_full = np.array(gt.conversion(datadir+"grs1915_%is_labels_test.txt"%tseg)[0])
-    labels_train_full = np.array(gt.conversion(datadir+"grs1915_%is_labels_train.txt"%tseg)[0])
-    labels_val_full = np.array(gt.conversion(datadir+"grs1915_%is_labels_val.txt"%tseg)[0])
+    labels_test_full = np.array(ut.conversion(datadir+"grs1915_%is_labels_test.txt"%tseg)[0])
+    labels_train_full = np.array(ut.conversion(datadir+"grs1915_%is_labels_train.txt"%tseg)[0])
+    labels_val_full = np.array(ut.conversion(datadir+"grs1915_%is_labels_val.txt"%tseg)[0])
 
     tstart_train_full = np.loadtxt(datadir+"grs1915_%is_tstart_train.txt"%tseg)
     tstart_test_full = np.loadtxt(datadir+"grs1915_%is_tstart_test.txt"%tseg)
@@ -45,8 +46,8 @@ def load_features(datadir, tseg, log_features=None, ranking=None):
                                         features_test_full))
 
 
-    lc_all_full = gt.getpickle(datadir+"grs1915_%is_lc_all.dat"%tseg)
-    hr_all_full = gt.getpickle(datadir+"grs1915_%is_hr_all.dat"%tseg)
+    lc_all_full = ut.getpickle(datadir+"grs1915_%is_lc_all.dat"%tseg)
+    hr_all_full = ut.getpickle(datadir+"grs1915_%is_hr_all.dat"%tseg)
 
     lc_train_full = lc_all_full["train"]
     lc_test_full = lc_all_full["test"]
